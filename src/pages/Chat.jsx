@@ -3,27 +3,62 @@ import axios from "axios";
 
 const Chat = () => {
   const [question, setQuestion] = useState("");
+  const [userQuestion, setUserQuestion] = useState(""); // for displaying in chat
   const [answer, setAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const ask = async (e) => {
     e.preventDefault();
-    const res = await axios.post("https://islamic-ai-backend.onrender.com/ask", { question });
-    setAnswer(res.data.answer);
+    if (!question.trim()) return;
+
+    setUserQuestion(question); // store the submitted question
+    setAnswer("");
+    setLoading(true);
+    try {
+      const res = await axios.post("https://islamic-ai-backend.onrender.com/ask", { question });
+      setAnswer(res.data.answer);
+    } catch (err) {
+      console.error(err);
+      setAnswer("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+      setQuestion(""); // clear input
+    }
   };
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-b from-blue-900 to-black text-white p-6">
       {/* Chat Header */}
       <div className="flex-1 overflow-auto mb-8">
-        <h2 className="text-3xl font-semibold text-center mb-4">Ask an Islamic Question</h2>
-        <div className="space-y-4">
+        <h2 className="text-3xl font-semibold text-center mb-6">Ask an Islamic Question</h2>
+
+        <div className="space-y-4 max-w-xl mx-auto">
+          {userQuestion && (
+            <div className="bg-gray-700 p-3 rounded-lg shadow">
+              <span className="font-semibold text-blue-300">You:</span>
+              <p className="mt-1">{userQuestion}</p>
+            </div>
+          )}
+
+          {loading && (
+            <div className="flex justify-center">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-400 border-solid"></div>
+              <span className="ml-3 text-blue-300 self-center">Generating response...</span>
+            </div>
+          )}
+
           {answer && (
-            <div className="bg-gray-800 p-4 rounded-lg shadow-lg max-w-xl mx-auto">
+            <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
               <h4 className="text-lg font-medium text-white mb-2">AI Answer:</h4>
-              <p>{answer}</p>
+              <p className="whitespace-pre-line">{answer}</p>
             </div>
           )}
         </div>
+
+        {/* Disclaimer */}
+        <p className="text-yellow-400 text-sm text-center mt-6">
+          ⚠️ These responses are AI-generated and should not be treated as religious fatwa. Always consult a qualified scholar.
+        </p>
       </div>
 
       {/* Input Section at the Bottom */}

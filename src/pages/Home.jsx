@@ -1,41 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const [setMousePosition] = useState({ x: 0, y: 0 });
-  const [rippleStyle, setRippleStyle] = useState({});
-
-  useEffect(() => {
-    const handleMouseMove = (event) => {
-      const x = event.clientX;
-      const y = event.clientY;
-      setMousePosition({ x, y });
-
-      // Create ripple effect (using radial gradient)
-      const ripple = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.5), rgba(10, 10, 50, 0.8))`;
-      setRippleStyle({
-        background: ripple,
-        transition: "background 1s ease-out",
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
   return (
     <div
       className="h-screen w-full text-white flex items-center justify-center px-4"
       style={{
-        ...rippleStyle,
-        background: "linear-gradient(135deg, rgba(3, 3, 41, 0.8), rgba(22, 22, 22, 0.8))", // Default gradient
-        backgroundSize: "200% 200%", // This makes the ripple effect more expansive
+        background: "linear-gradient(135deg, rgba(3, 3, 41, 0.9), rgba(22, 22, 22, 0.9))",
+        backgroundSize: "200% 200%",
         backgroundPosition: "center",
-        transition: "background 1s ease-out", // Smooth transition for ripple effect
+        transition: "background 1s ease-out",
       }}
     >
       <motion.div

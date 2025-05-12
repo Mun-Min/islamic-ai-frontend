@@ -7,7 +7,7 @@ const Chat = () => {
 
   const ask = async (e) => {
     e.preventDefault();
-    const res = await axios.post("https://your-backend-url/ask", { question });
+    const res = await axios.post("https://islamic-ai-backend.onrender.com/ask", { question });
     setAnswer(res.data.answer);
   };
 

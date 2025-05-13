@@ -2,7 +2,6 @@
 
 This is the **React frontend** for the Islamic Q&A app powered by OpenAI. It allows users to ask Islamic questions and receive formatted AI responses. Hosted on **Netlify**.
 
-🔗 [Backend Repo](https://github.com/Mun-Min/islamic-ai-backend)
 ---
 
 ## 🌍 Live Demo
@@ -11,6 +10,7 @@ This is the **React frontend** for the Islamic Q&A app powered by OpenAI. It all
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7e48c201-6bac-4b82-b640-885313ff8e96/deploy-status)](https://app.netlify.com/sites/islamicai/deploys)
 
+🔗 [Backend Repo](https://github.com/Mun-Min/islamic-ai-backend)
 ---
 
 ## 📦 Tech Stack

@@ -1,4 +1,4 @@
-# 🧠 Islamic AI Frontend
+# 🕌 Islamic AI Frontend
 
 This is the **React frontend** for the Islamic Q&A app powered by OpenAI. It allows users to ask Islamic questions and receive formatted AI responses. Hosted on **Netlify**.
 

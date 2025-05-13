@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
 
 const Chat = () => {
   const [question, setQuestion] = useState("");
@@ -12,15 +13,25 @@ const Chat = () => {
     if (!question.trim()) return;
 
     setLoading(true);
-    setUserQuestion(question); // Save question to display
-    setAnswer(""); // Clear old answer
+    setUserQuestion(question);
+    setAnswer("");
+
+    // Clean up markdown formatting
+    const cleanMarkdown = (text) =>
+      text
+        .replace(/\n{3,}/g, "\n\n") // Replace 3+ line breaks with just 2
+        .replace(/[ \t]+\n/g, "\n") // Remove trailing spaces/tabs
+        .trim();
+
     try {
       const res = await axios.post("https://islamic-ai-backend.onrender.com/ask", { question });
-      setAnswer(res.data.answer);
+      const cleaned = cleanMarkdown(res.data.answer);
+      setAnswer(cleaned);
     } catch (err) {
       setAnswer("⚠️ An error occurred. Please try again.");
     }
-    setQuestion(""); // Clear input
+
+    setQuestion("");
     setLoading(false);
   };
 
@@ -50,7 +61,10 @@ const Chat = () => {
           {answer && (
             <div className="bg-gray-800 p-4 rounded-lg shadow-lg whitespace-pre-line">
               <h4 className="text-lg font-bold text-white mb-2">🤖 AI Answer:</h4>
-              <p>{answer}</p>
+              <div className="prose prose-invert max-w-none">
+              <ReactMarkdown>{answer}</ReactMarkdown>
+              </div>
+              {answer.includes("\n") && <br />}
             </div>
           )}
         </div>

@@ -1,3 +1,4 @@
+
 # 🕌 Islamic AI Frontend
 
 This is the **React frontend** for the Islamic Q&A app powered by OpenAI. It allows users to ask Islamic questions and receive formatted AI responses. Hosted on **Netlify**.
@@ -20,6 +21,7 @@ This is the **React frontend** for the Islamic Q&A app powered by OpenAI. It all
 - **TailwindCSS**
 - **Axios**
 - **Netlify** for deployment
+- **Reactbits** for animations
 
 ---
 
@@ -47,9 +49,11 @@ Make sure the backend is running at `http://localhost:8000` or update the API UR
 
 - ✅ Ask any Islamic question
 - ✅ Clean and modern UI using TailwindCSS
+- ✅ Smooth animations powered by Reactbits
 - ✅ Loading animation while response is generated
 - ✅ AI-generated disclaimer
 - ✅ Scrollable chat-like interface
+- ✅ User can see chat history, with AI responses based on previous inputs
 - ✅ Auto-clears question after submission
 
 ---
@@ -70,9 +74,12 @@ You can configure the URL in `Chat.jsx`.
 
 ```
 src/
+├── components/
+│   └── ShinyText.jsx    # animation component
+│   └── SplitText.jsx    # animation component
 ├── pages/
-│   └── Chat.jsx    # Main chat component
-│   └── Home.jsx    # Home page component
+│   └── Chat.jsx    # Main chat page
+│   └── Home.jsx    # Home page 
 ├── App.js
 └── index.js
 ```

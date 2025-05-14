@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import Header from "../Header"; 
+import Header from "../Header";
 
 // Function to clean up excess newlines
 const cleanText = (text) => {
@@ -43,6 +43,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (chatRef.current) {
+      // Scroll to the bottom when new messages arrive
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [messages, loading]);
@@ -62,7 +63,8 @@ const Chat = () => {
 
         <div
           ref={chatRef}
-          className="space-y-4 w-full max-w-4xl mx-auto min-h-[630px] max-h-screen overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
+          className="space-y-4 w-full max-w-4xl mx-auto flex-1 overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
+          style={{ maxHeight: "calc(100vh - 285px)" }} // Adjust to keep space for header and input form
         >
           {messages.map((msg, i) => (
             <div

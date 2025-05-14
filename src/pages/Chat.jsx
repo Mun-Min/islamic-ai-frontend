@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
+import Header from "../Header"; 
 
 // Function to clean up excess newlines
 const cleanText = (text) => {
@@ -26,8 +27,6 @@ const Chat = () => {
       });
 
       const rawBotReply = res.data.answer || "⚠️ No response received.";
-
-      // Clean up extra newlines in the response
       const cleanedBotReply = cleanText(rawBotReply);
 
       setMessages([...newMessages, { role: "assistant", content: cleanedBotReply }]);
@@ -49,8 +48,10 @@ const Chat = () => {
   }, [messages, loading]);
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-b from-blue-900 to-black text-white p-6">
-      <div className="flex-1 mb-8 overflow-hidden">
+    <div className="h-screen flex flex-col bg-gradient-to-b from-blue-900 to-black text-white">
+      <Header />
+
+      <div className="flex-1 p-6 overflow-hidden">
         <h2 className="text-3xl font-semibold text-center mb-4">
           Ask an Islamic Question
         </h2>

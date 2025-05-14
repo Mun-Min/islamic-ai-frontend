@@ -62,7 +62,7 @@ const Chat = () => {
 
         <div
           ref={chatRef}
-          className="space-y-4 w-full max-w-4xl mx-auto h-[630px] overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
+          className="space-y-4 w-full max-w-4xl mx-auto min-h-[630px] max-h-screen overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
         >
           {messages.map((msg, i) => (
             <div

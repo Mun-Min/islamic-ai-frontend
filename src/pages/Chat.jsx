@@ -8,12 +8,18 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const chatRef = useRef(null);
 
+  // Markdown cleanup function
+  const cleanMarkdown = (text) =>
+    text
+      .replace(/\n{3,}/g, "\n\n") // Replace 3+ line breaks with 2
+      .replace(/[ \t]+\n/g, "\n") // Remove trailing spaces/tabs
+      .trim();
+
   const ask = async (e) => {
     e.preventDefault();
     if (!question.trim()) return;
 
     setLoading(true);
-
     const newMessages = [...messages, { role: "user", content: question }];
 
     try {
@@ -21,9 +27,10 @@ const Chat = () => {
         messages: newMessages,
       });
 
-      const botReply = res.data.answer.trim();
+      const rawBotReply = res.data.answer || "⚠️ No response received.";
+      const cleanedBotReply = cleanMarkdown(rawBotReply);
 
-      setMessages([...newMessages, { role: "assistant", content: botReply }]);
+      setMessages([...newMessages, { role: "assistant", content: cleanedBotReply }]);
     } catch (err) {
       setMessages([
         ...newMessages,
@@ -35,7 +42,6 @@ const Chat = () => {
     setLoading(false);
   };
 
-  // Scroll to bottom on new message
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
@@ -49,15 +55,13 @@ const Chat = () => {
           Ask an Islamic Question
         </h2>
 
-        {/* Disclaimer */}
         <div className="text-center text-sm text-yellow-400 mb-6">
           ⚠️ Responses are AI-generated and may not be 100% accurate. Always consult a qualified scholar for religious matters.
         </div>
 
-        {/* Chat history container */}
         <div
           ref={chatRef}
-          className="space-y-4 w-full max-w-4xl mx-auto h-[500px] overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
+          className="space-y-4 w-full max-w-4xl mx-auto h-[700px] overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
         >
           {messages.map((msg, i) => (
             <div
@@ -85,7 +89,6 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Input Form */}
       <form
         onSubmit={ask}
         className="w-full flex items-center justify-center space-x-4 fixed bottom-8 left-1/2 transform -translate-x-1/2 z-10 px-4"

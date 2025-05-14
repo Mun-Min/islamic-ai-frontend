@@ -64,7 +64,7 @@ const Chat = () => {
         <div
           ref={chatRef}
           className="space-y-4 w-full max-w-4xl mx-auto flex-1 overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
-          style={{ maxHeight: "calc(100vh - 285px)" }} // Adjust to keep space for header and input form
+          style={{ maxHeight: "calc(100vh - 290px)" }} // Adjust to keep space for header and input form
         >
           {messages.map((msg, i) => (
             <div

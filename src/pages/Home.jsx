@@ -41,7 +41,7 @@ const Home = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-b from-blue-700 to-black text-white px-8 py-3 rounded-full text-lg font-bold border-3 border-transparent hover:bg-transparent transition"
+              className="bg-gradient-to-b from-blue-600 to-black text-white px-8 py-3 rounded-full text-lg font-bold border-3 border-transparent hover:bg-transparent transition"
             >
               <ShinyText text="Start a Conversation" disabled={false} speed={1} className="custom-class" />
             </motion.button>

@@ -2,20 +2,16 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
+// Function to clean up excess newlines
+const cleanText = (text) => {
+  return text.replace(/\n{2,}/g, "\n\n").trim(); // Collapsing multiple newlines to a single one
+};
+
 const Chat = () => {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const chatRef = useRef(null);
-
-  // Markdown cleanup function
-  const cleanMarkdown = (text) =>
-    text
-      .replace(/\r/g, "")               // Remove carriage returns
-      .replace(/[ \t]+\n/g, "\n")       // Remove trailing spaces/tabs
-      .replace(/\n{3,}/g, "\n\n")       // Limit multiple newlines to 2
-      .replace(/\n\s*\n/g, "\n\n")      // Remove lines that contain only whitespace
-      .trim();
 
   const ask = async (e) => {
     e.preventDefault();
@@ -30,7 +26,9 @@ const Chat = () => {
       });
 
       const rawBotReply = res.data.answer || "⚠️ No response received.";
-      const cleanedBotReply = cleanMarkdown(rawBotReply);
+
+      // Clean up extra newlines in the response
+      const cleanedBotReply = cleanText(rawBotReply);
 
       setMessages([...newMessages, { role: "assistant", content: cleanedBotReply }]);
     } catch (err) {
@@ -68,17 +66,13 @@ const Chat = () => {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`p-4 rounded-lg shadow-md prose prose-invert max-w-none ${
+              className={`p-4 rounded-lg shadow-md max-w-none whitespace-pre-wrap break-words ${
                 msg.role === "user"
                   ? "bg-gray-700 text-green-300"
                   : "bg-gray-800 text-white"
               }`}
             >
-              <ReactMarkdown>
-                {msg.role === "user"
-                  ? `**You:** ${msg.content}`
-                  : `**AI:** ${msg.content}`}
-              </ReactMarkdown>
+              <ReactMarkdown>{msg.role === "user" ? `**You:** ${msg.content}` : msg.content}</ReactMarkdown>
             </div>
           ))}
 

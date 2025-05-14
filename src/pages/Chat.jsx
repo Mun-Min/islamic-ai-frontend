@@ -11,8 +11,10 @@ const Chat = () => {
   // Markdown cleanup function
   const cleanMarkdown = (text) =>
     text
-      .replace(/\n{3,}/g, "\n\n") // Replace 3+ line breaks with 2
-      .replace(/[ \t]+\n/g, "\n") // Remove trailing spaces/tabs
+      .replace(/\r/g, "")               // Remove carriage returns
+      .replace(/[ \t]+\n/g, "\n")       // Remove trailing spaces/tabs
+      .replace(/\n{3,}/g, "\n\n")       // Limit multiple newlines to 2
+      .replace(/\n\s*\n/g, "\n\n")      // Remove lines that contain only whitespace
       .trim();
 
   const ask = async (e) => {
@@ -66,7 +68,7 @@ const Chat = () => {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`p-4 rounded-lg shadow-md whitespace-pre-line ${
+              className={`p-4 rounded-lg shadow-md prose prose-invert max-w-none ${
                 msg.role === "user"
                   ? "bg-gray-700 text-green-300"
                   : "bg-gray-800 text-white"

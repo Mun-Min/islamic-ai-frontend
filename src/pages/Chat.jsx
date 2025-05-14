@@ -1,70 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
 const Chat = () => {
   const [question, setQuestion] = useState("");
-  const [userQuestion, setUserQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const chatRef = useRef(null);
 
   const ask = async (e) => {
     e.preventDefault();
     if (!question.trim()) return;
 
     setLoading(true);
-    setUserQuestion(question);
-    setAnswer("");
 
-    // Clean up markdown formatting
-    const cleanMarkdown = (text) =>
-      text
-        .replace(/\n{3,}/g, "\n\n") // Replace 3+ line breaks with just 2
-        .replace(/[ \t]+\n/g, "\n") // Remove trailing spaces/tabs
-        .trim();
+    const newMessages = [...messages, { role: "user", content: question }];
 
     try {
-      const res = await axios.post("https://islamic-ai-backend.onrender.com/ask", { question });
-      const cleaned = cleanMarkdown(res.data.answer);
-      setAnswer(cleaned);
+      const res = await axios.post("https://islamic-ai-backend.onrender.com/ask", {
+        messages: newMessages,
+      });
+
+      const botReply = res.data.answer.trim();
+
+      setMessages([...newMessages, { role: "assistant", content: botReply }]);
     } catch (err) {
-      setAnswer("⚠️ An error occurred. Please try again.");
+      setMessages([
+        ...newMessages,
+        { role: "assistant", content: "⚠️ An error occurred. Please try again." },
+      ]);
     }
 
     setQuestion("");
     setLoading(false);
   };
 
+  // Scroll to bottom on new message
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages, loading]);
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-b from-blue-900 to-black text-white p-6">
-      <div className="flex-1 overflow-auto mb-8">
-        <h2 className="text-3xl font-semibold text-center mb-4">Ask an Islamic Question</h2>
+      <div className="flex-1 mb-8 overflow-hidden">
+        <h2 className="text-3xl font-semibold text-center mb-4">
+          Ask an Islamic Question
+        </h2>
 
         {/* Disclaimer */}
         <div className="text-center text-sm text-yellow-400 mb-6">
           ⚠️ Responses are AI-generated and may not be 100% accurate. Always consult a qualified scholar for religious matters.
         </div>
 
-        <div className="space-y-4 max-w-xl mx-auto">
-          {userQuestion && (
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <h4 className="text-base font-semibold text-green-300">You asked:</h4>
-              <p className="text-white">{userQuestion}</p>
+        {/* Chat history container */}
+        <div
+          ref={chatRef}
+          className="space-y-4 w-full max-w-4xl mx-auto h-[500px] overflow-y-auto px-4 bg-gray-900 rounded-lg p-4 shadow-inner"
+        >
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`p-4 rounded-lg shadow-md whitespace-pre-line ${
+                msg.role === "user"
+                  ? "bg-gray-700 text-green-300"
+                  : "bg-gray-800 text-white"
+              }`}
+            >
+              <ReactMarkdown>
+                {msg.role === "user"
+                  ? `**You:** ${msg.content}`
+                  : `**AI:** ${msg.content}`}
+              </ReactMarkdown>
             </div>
-          )}
+          ))}
+
           {loading && (
             <div className="flex items-center justify-center space-x-2 text-blue-300">
               <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
               <span>Generating response...</span>
-            </div>
-          )}
-          {answer && (
-            <div className="bg-gray-800 p-4 rounded-lg shadow-lg whitespace-pre-line">
-              <h4 className="text-lg font-bold text-white mb-2">🤖 AI Answer:</h4>
-              <div className="prose prose-invert max-w-none">
-              <ReactMarkdown>{answer}</ReactMarkdown>
-              </div>
-              {answer.includes("\n") && <br />}
             </div>
           )}
         </div>
@@ -73,7 +88,7 @@ const Chat = () => {
       {/* Input Form */}
       <form
         onSubmit={ask}
-        className="w-full flex items-center justify-center space-x-4 fixed bottom-8 left-1/2 transform -translate-x-1/2 z-10"
+        className="w-full flex items-center justify-center space-x-4 fixed bottom-8 left-1/2 transform -translate-x-1/2 z-10 px-4"
       >
         <input
           type="text"
